@@ -8,7 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var basePath = AppDomain.CurrentDomain.BaseDirectory;
+
+    //Set the comments path for the swagger json and ui.
+    var xmlPath = Path.Combine(basePath, @"Task2.xml");
+    options.IncludeXmlComments(xmlPath);
+});
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -27,7 +34,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.MapControllers();
 

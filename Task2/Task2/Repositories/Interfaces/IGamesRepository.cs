@@ -7,6 +7,6 @@ namespace Task2.Repositories
         Task<bool> DeleteAsync(Guid id);
         Task<List<Game>> GetAllAsync();
         Task<Game?> GetAsync(Guid id);
-        Task<string> PostAsync(Game game);
+        Task<Guid?> PostAsync(Game game);
     }
 }

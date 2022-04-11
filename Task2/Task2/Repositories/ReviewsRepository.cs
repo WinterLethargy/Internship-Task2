@@ -6,25 +6,29 @@ namespace Task2.Repositories
 {
     public class ReviewsRepository : IReviewsRepository
     {
-        readonly AppDataContext _context;
-        readonly DbSet<Review> _reviews;
+        private readonly AppDataContext _context;
+        private readonly DbSet<Review> _reviews;
+
         public ReviewsRepository(AppDataContext context)
         {
             _context = context;
             _reviews = context.Set<Review>();
         }
-        public async Task<string> PostAsync(Review review)
+
+        public async Task<Guid?> PostAsync(Review review)
         {
             await _reviews.AddAsync(review);
+
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {
-                return ex.InnerException.Message;
+                return null;
             }
-            return string.Empty;
+
+            return review.Id;
         }
     }
 }
