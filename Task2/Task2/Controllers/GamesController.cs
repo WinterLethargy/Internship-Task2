@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using Task2.Models;
 using Task2.Repositories;
 
@@ -20,9 +21,10 @@ namespace Task2.Controllers
         /// Возвращает список всех игр без рецензий
         /// </summary>
         /// <returns></returns>
+        /// <response code="204">В базе данных нет игр</response>
+        [HttpGet()]
         [ProducesResponseType(typeof(Game), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [HttpGet()]
         public async Task<IActionResult> GetAllGames()
         {
             var games = await _gameRepository.GetAllAsync();
@@ -38,13 +40,15 @@ namespace Task2.Controllers
         /// <summary>
         /// Возвращает игру и список ее рецензий
         /// </summary>
-        /// <param name="id">Игра с таким Id должна существовать</param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(Game), StatusCodes.Status200OK)]
+        /// <response code="204">Игры с таким Id нет в базе данных</response>
+        /// <response code="400">Id не приводится к типу Guid</response>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetGame(string id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Game), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGame([Required] string id)
         {
             Guid gameId;
             try
@@ -71,11 +75,13 @@ namespace Task2.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        /// <response code="204">Передан несуществующий Id</response>
+        /// <response code="400">Id не приводится к Guid</response>
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGame(string id)
+        public async Task<IActionResult> DeleteGame([Required] string id)
         {
             Guid gameId;
             try
@@ -103,11 +109,11 @@ namespace Task2.Controllers
         /// <param name="name"></param>
         /// <param name="genr"></param>
         /// <returns></returns>
+        /// <response code="400">Не может быть игры без имени или жанра</response>
+        [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesDefaultResponseType]
-        [HttpPost()]
-        public async Task<IActionResult> AddGame(string name, string genr)
+        public async Task<IActionResult> AddGame([Required] string name, [Required] string genr)
         {
             var game = new Game() { Name = name, Genre = genr };
             var gameId = await _gameRepository.PostAsync(game);

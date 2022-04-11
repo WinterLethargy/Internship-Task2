@@ -2,6 +2,7 @@
 using Task2.Models;
 using Task2.Repositories;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Task2.Controllers
 {
@@ -19,14 +20,17 @@ namespace Task2.Controllers
         /// <summary>
         /// Добавляет рецензию на игру в базу данных
         /// </summary>
-        /// <param name="gameId">Игра с таким Id должна существовать</param>
-        /// <param name="text">Текс необязателен</param>
+        /// <param name="gameId"></param>
+        /// <param name="text">Текст необязателен</param>
         /// <param name="rating">Должен быть в пределах от 0 до 10</param>
         /// <returns></returns>
+        /// <response code="400">
+        /// Если рецензия ссылается на несуществующую игру, Id не приводится к Guid или рейтинг выходит за границы 0-10
+        /// </response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddReview(string gameId, string text, int rating)
+        public async Task<IActionResult> AddReview([Required] string gameId, string? text, [Required] int rating)
         {
             Guid _gameId;
             try
