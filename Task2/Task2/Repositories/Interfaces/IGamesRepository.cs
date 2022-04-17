@@ -4,9 +4,9 @@ namespace Task2.Repositories
 {
     public interface IGamesRepository
     {
-        Task<bool> DeleteAsync(Guid id);
-        Task<List<Game>> GetAllAsync();
-        Task<Game?> GetAsync(Guid id);
-        Task<Guid?> PostAsync(Game game);
+        public Task<bool> DeleteAsync(Guid id);
+        public Task<List<Game>> GetAllAsync();
+        public Task<Game?> GetAsync(Guid id);
+        public Task<Guid?> PostAsync(Game game);
     }
 }

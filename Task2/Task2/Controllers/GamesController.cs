@@ -111,7 +111,7 @@ namespace Task2.Controllers
         /// <returns></returns>
         /// <response code="400">Не может быть игры без имени или жанра</response>
         [HttpPost()]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddGame([Required] string name, [Required] string genr)
         {
@@ -123,7 +123,7 @@ namespace Task2.Controllers
                 return BadRequest();
             }
             
-            return Ok();
+            return Ok(gameId);
         }
     }
 }

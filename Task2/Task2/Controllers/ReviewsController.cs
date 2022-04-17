@@ -28,7 +28,7 @@ namespace Task2.Controllers
         /// Если рецензия ссылается на несуществующую игру, Id не приводится к Guid или рейтинг выходит за границы 0-10
         /// </response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddReview([Required] string gameId, string? text, [Required] int rating)
         {
@@ -50,7 +50,7 @@ namespace Task2.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok(reviewId);
         }
     }
 }
